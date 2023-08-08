@@ -1,0 +1,24 @@
+<div class="topbar">
+    <p-breadcrumb class="max-w-full" [model]="items" [style]="{border: 'none'}"></p-breadcrumb>
+
+    <button class="p-link topbar-toggle-button">
+        <i class="pi pi-bars" (click)="openSideBar()"></i>
+    </button>
+    <div class="layout-topbar-menu">
+        <button class="p-link layout-topbar-menu-item">
+          <i class="pi pi-cog"></i>
+        </button>
+        <div class="layout-topbar-menu-item">
+          <div class="profile-body">
+            <span>Zin Bhone Htut</span>
+            <p class="mb-0 mt-0" appDropdown [elementRef]="dropDown">Admin <i class="pi pi-angle-down dropdown-toggle"></i></p>
+          </div>
+
+          <!-- profile dropdown -->
+          <ul class="profileDropdown" #dropDown>
+            <li><i class="pi pi-lock"></i>Change password</li>
+            <li><i class="pi pi-power-off"></i>Logout</li>
+          </ul>
+        </div>
+    </div>
+</div>

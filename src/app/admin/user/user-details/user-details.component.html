@@ -1,0 +1,90 @@
+<p-card class="card">
+  <h3 class="mt-0">Manage User</h3>
+  <div class="col-12">
+    <form *ngIf="userForm && !isLoading; else loadingTemplate" [formGroup]="userForm">
+      <div class="p-fluid">
+        <div class="field">
+          <label htmlFor="name">Name</label>
+          <input pInputText [class.ng-dirty]="isFormInvalid('name')" type="text" name="name" autocomplete="off" formControlName="name" />
+          <div *ngIf="isFormInvalid('name')" class="text-danger">
+            <div *ngIf="hasError('name', 'required')">
+              * Please enter user name
+            </div>
+            <div *ngIf="hasError('name', 'minlength')">
+              * User name is too short
+            </div>
+            <div *ngIf="hasError('name', 'maxlength')">
+              * User name cannot be more than 60 characters
+            </div>
+            <div *ngIf="hasError('name', 'userExists')">
+              * User name is already taken. Please enter other name.
+            </div>
+          </div>
+        </div>
+        <div class="field">
+          <label htmlFor="email">Email</label>
+          <input pInputText [class.ng-dirty]="isFormInvalid('email')" type="email" name="email" email="true" autocomplete="off" formControlName="email" />
+          <div *ngIf="isFormInvalid('email')" class="text-danger">
+            <div *ngIf="hasError('email', 'required')">
+              * Please enter email
+            </div>
+            <div *ngIf="hasError('email', 'pattern')">
+              * Please enter a valid email
+            </div>
+            <div *ngIf="hasError('email', 'maxlength')">
+              * Email cannot be more than 80 characters
+            </div>
+          </div>
+        </div>
+        <div class="field">
+          <label htmlFor="telephone">Telephone</label>
+          <input pInputText formControlName="telephone" appNumberOnly placeholder="Phone number" [maxlength]="11"/>
+          <div *ngIf="isFormInvalid('telephone') && hasError('telephone', 'required')" class="text-danger">
+            <div *ngIf="hasError('telephone', 'required')">
+              * Please enter phone number
+            </div>
+          </div>
+        </div>
+        <div class="field mb-2">
+          <label htmlFor="gender">Gender</label>
+          <div class="flex flex-wrap gap-3">
+            <div class="flex align-items-center">
+              <p-radioButton [inputId]="gender.MALE" [value]="gender.MALE" formControlName="gender"></p-radioButton>
+              <label [for]="gender.MALE" class="ml-2">{{ gender.MALE }}</label>
+            </div>
+            <div class="flex align-items-center">
+              <p-radioButton [inputId]="gender.FEMALE" [value]="gender.FEMALE" formControlName="gender"></p-radioButton>
+              <label [for]="gender.FEMALE" class="ml-2">{{ gender.FEMALE }}</label>
+            </div>
+            <div *ngIf="isFormInvalid('gender') && hasError('gender', 'required')" class="text-danger">
+              * Please select gender
+            </div>
+          </div>
+        </div>
+        <div class="field">
+          <label htmlFor="role">Role</label>
+          <p-multiSelect formControlName="roles" [options]="roleList" optionLabel="roleName" placeholder="Select roles"
+            display="chip"></p-multiSelect>
+          <div *ngIf="isFormInvalid('roles') && hasError('roles', 'required')" class="text-danger">
+            * Please select at least 1 role
+          </div>
+        </div>
+      </div>
+      <div class="flex justify-content-end">
+        <button pButton pRipple class="p-button-secondary mr-2" routerLink="../">Cancel</button>
+        <button pButton pRipple class="p-button-success" (click)="createOrUpdateUser()" [disabled]="userForm.invalid">
+          {{ user.id == 0 ? 'Create' : 'Update'}}
+        </button>
+      </div>
+    </form>
+    <ng-template class="grid grid-nogutter" #loadingTemplate>
+      <div class="col-12 md:col-6">
+        <p-skeleton width="40rem" height="3rem" styleClass="mb-3"></p-skeleton>
+        <p-skeleton width="60rem" height="3rem" styleClass="mb-3"></p-skeleton>
+        <p-skeleton width="40rem" height="3rem" styleClass="mb-3"></p-skeleton>
+        <p-skeleton width="60rem" height="3rem" styleClass="mb-3"></p-skeleton>
+      </div>
+    </ng-template>
+  </div>
+</p-card>
+<p-toast></p-toast>
