@@ -4,6 +4,17 @@ import { remove as _remove } from 'lodash';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { User } from '../../models/user.model';
 import { UserService } from '../../services/user.service';
+import { ColumnItem } from '../../models/column-item.model';
+
+const columns: ColumnItem[] = [
+  { header: 'No.', field: 'no', isForzenColumn: true },
+  { header: 'Name', field: 'name', style: 'min-width: 150px' },
+  { header: 'Gender', field: 'gender' },
+  { header: 'Telephone', field: 'telephone' },
+  { header: 'Email', field: 'email' },
+  { header: 'Role', field: 'roles', style: 'min-width: 150px' },
+  { header: 'Created Date', field: 'createdDate', style: 'min-width: 150px' }
+]
 
 @Component({
   selector: 'app-user-list',
@@ -14,8 +25,9 @@ export class UserListComponent implements OnInit, OnDestroy {
 
   userList: User[] = [];
   loading: boolean = true;
+  columns = columns;
 
-  constructor(private userService: UserService, private confirmationService: ConfirmationService, 
+  constructor(private userService: UserService, private confirmationService: ConfirmationService,
     private messageService: MessageService) { }
 
   ngOnInit(): void {
