@@ -5,6 +5,7 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { User } from '../../models/user.model';
 import { UserService } from '../../services/user.service';
 import { ColumnItem } from '../../models/column-item.model';
+import { EMPTY, catchError, filter, switchMap } from 'rxjs';
 
 const columns: ColumnItem[] = [
   { header: 'No.', field: 'no', isForzenColumn: true },
@@ -39,17 +40,22 @@ export class UserListComponent implements OnInit, OnDestroy {
 
   deleteUser(event: Event, userId: number) {
     this.confirmationService.confirm({
-      message: 'Are you sure to delete this record?',
+      message: 'Are you sure to delete?',
       target: event.target as EventTarget,
       icon: 'pi pi-exclamation-triangle',
       acceptLabel: 'Sure',
       acceptButtonStyleClass: 'p-button-primary',
       accept: () => {
-        this.userService.deleteUser(userId).subscribe((reponse: HttpResponse<Object>) => {
-          if (reponse.ok) {
-            _remove(this.userList, user => user.id === userId);
-            this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Record is deleted' });
-          }
+        this.userService.deleteUser(userId).pipe(
+          filter((reponse: HttpResponse<Object>) => reponse.ok),
+          switchMap(() => this.userService.getAllUser()),
+          catchError((error) => {
+            this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to delete user' });
+            return EMPTY;
+          })
+        ).subscribe((userList: User[]) => {
+            this.userList = userList;
+            this.messageService.add({ severity: 'success', summary: 'Success', detail: 'User is deleted' });
         });
       }
     });
