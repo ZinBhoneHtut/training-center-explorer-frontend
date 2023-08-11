@@ -3,6 +3,9 @@ import { Injectable } from '@angular/core';
 import { environment } from '@environment';
 import { Observable } from 'rxjs';
 import { User } from '../models/user.model';
+import { QueryCriteria } from '../models/query-criteria.model';
+import { DataTableResponse } from '../models/datatable-response.model';
+import { queryCriteriaToHttpParam } from 'src/app/shared/shared.functions';
 
 @Injectable({
   providedIn: 'root'
@@ -13,8 +16,10 @@ export class UserService {
 
   constructor(private _http: HttpClient) { }
 
-  getAllUser(): Observable<User[]> {
-    return this._http.get<User[]>(`${this.BASE_URL}/all`);
+  getAllUser(queryCriteria: QueryCriteria) {
+    return this._http.get<DataTableResponse<User>>(`${this.BASE_URL}`, {
+      params: queryCriteriaToHttpParam(queryCriteria)
+    });
   };
 
   getUserById(id: number) {

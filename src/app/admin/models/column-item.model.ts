@@ -3,5 +3,6 @@ export interface ColumnItem {
     header: string,
     isForzenColumn?: boolean,
     alignForzen?: string,
-    style?: string
+    style?: string,
+    sort: boolean
 }

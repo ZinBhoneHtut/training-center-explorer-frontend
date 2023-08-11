@@ -1,40 +1,60 @@
 <p-card class="card">
-    <p-table id="user-table" [value]="userList" 
-        [loading]="loading" [showLoader]="false" responsiveLayout="scroll"  [scrollable]="true"
-        [tableStyle]="{ 'min-width': '50rem' }">
+    <p-table 
+        id="user-table" 
+        [value]="userList" 
+        scrollHeight="400px" 
+        [loading]="loading" 
+        [showLoader]="false"
+        responsiveLayout="scroll" 
+        [scrollable]="true" 
+        [rows]="rows" 
+        [totalRecords]="totalRecords" 
+        [lazy]="true"
+        (onLazyLoad)="nextPage($event)" 
+        [paginator]="true" 
+        [currentPageReportTemplate]="'{currentPage} of {totalPages}'"
+        [showCurrentPageReport]="true" 
+        [sortOrder]="-1" 
+        [sortField]="'audit.createdDate'"
+        [rowsPerPageOptions]="rowOptions"
+    >
         <ng-template pTemplate="caption">
             <div class="flex">
                 <button pButton routerLink="{{0}}" label="New user" class="create-button" icon="pi pi-plus"></button>
                 <span class="p-input-icon-left ml-auto">
-                  <i class="pi pi-search"></i>
-                  <input pInputText type="text" placeholder="Search..." />
-              </span>
+                    <i class="pi pi-search"></i>
+                    <input pInputText type="text" placeholder="Search..." />
+                </span>
             </div>
         </ng-template>
         <ng-template pTemplate="header">
             <tr>
-                <th *ngFor="let column of columns" 
-                     alignFrozen="{{column?.alignForzen??'left'}}" 
-                     pFrozenColumn [frozen]="column?.isForzenColumn??false">
-                    {{column.header}}
+                <th *ngFor="let column of columns" alignFrozen="{{column?.alignForzen??'left'}}" pFrozenColumn
+                    [frozen]="column?.isForzenColumn??false" 
+                    [pSortableColumn]="column.sort? column.field == 'createdDate'? 'audit.createdDate' : column.field : undefined">
+                    {{column.header}} 
+                    <p-sortIcon *ngIf="column.sort" [field]="column.field == 'createdDate'? 'audit.createdDate' : column.field" [style]="column?.style">
+                    </p-sortIcon>
                 </th>
-                <th alignFrozen="right" pFrozenColumn>Action</th>
+                <th >Action</th>
             </tr>
         </ng-template>
         <ng-template pTemplate="body" let-user let-index="rowIndex">
             <tr>
-                <td *ngFor="let column of columns" [style]="column?.style" 
-                    alignFrozen="{{column?.alignForzen??'left'}}"
+                <td *ngFor="let column of columns" [style]="column?.style" alignFrozen="{{column?.alignForzen??'left'}}"
                     pFrozenColumn [frozen]="column?.isForzenColumn??false">
                     {{
-                        column.field == 'no'? index+1 
-                        : column.field == 'roles'? (user[column.field] | listToCommaSeparatedString : 'roleName') 
-                        : user[column.field]
+                    column.field == 'no'? index+1
+                    : column.field == 'roles'? (user[column.field] | listToCommaSeparatedString : 'roleName')
+                    : user[column.field]
                     }}
                 </td>
-                <td alignFrozen="right" pFrozenColumn style="min-width: 120px;" class="card flex flex-wrap gap-2 align-items-center">
-                    <p-button icon="pi pi-file-edit" styleClass="p-button-primary p-button-sm" routerLink="{{user.id}}"></p-button>
-                    <p-button icon="pi pi-trash" styleClass="p-button-danger p-button-sm" (click)="deleteUser($event, user.id)"></p-button>
+                <td style="min-width: 120px; min-height: 80px"
+                    class="card flex flex-wrap gap-2 align-items-center">
+                    <p-button icon="pi pi-file-edit" styleClass="p-button-primary p-button-sm"
+                        routerLink="{{user.id}}"></p-button>
+                    <p-button icon="pi pi-trash" styleClass="p-button-danger p-button-sm"
+                        (click)="deleteUser($event, user.id)"></p-button>
                 </td>
             </tr>
         </ng-template>
