@@ -1,5 +1,5 @@
 <p-card class="card">
-    <p-table 
+    <p-table
         id="user-table" 
         [value]="userList" 
         scrollHeight="400px" 
@@ -12,7 +12,7 @@
         [lazy]="true"
         (onLazyLoad)="nextPage($event)" 
         [paginator]="true" 
-        [currentPageReportTemplate]="'{currentPage} of {totalPages}'"
+        currentPageReportTemplate="Showing {currentPage} to {last} of {totalRecords} entries"
         [showCurrentPageReport]="true" 
         [sortOrder]="-1" 
         [sortField]="'audit.createdDate'"
@@ -23,7 +23,7 @@
                 <button pButton routerLink="{{0}}" label="New user" class="create-button" icon="pi pi-plus"></button>
                 <span class="p-input-icon-left ml-auto">
                     <i class="pi pi-search"></i>
-                    <input pInputText type="text" placeholder="Search..." />
+                    <input pInputText type="text" #search placeholder="Search..." />
                 </span>
             </div>
         </ng-template>
@@ -44,7 +44,7 @@
                 <td *ngFor="let column of columns" [style]="column?.style" alignFrozen="{{column?.alignForzen??'left'}}"
                     pFrozenColumn [frozen]="column?.isForzenColumn??false">
                     {{
-                    column.field == 'no'? index+1
+                    column.field == 'id'? index+1
                     : column.field == 'roles'? (user[column.field] | listToCommaSeparatedString : 'roleName')
                     : user[column.field]
                     }}
@@ -68,6 +68,9 @@
                 <td><p-skeleton></p-skeleton></td>
                 <td><p-skeleton></p-skeleton></td>
             </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+            <div>Testinng</div>
         </ng-template>
     </p-table>
 </p-card>

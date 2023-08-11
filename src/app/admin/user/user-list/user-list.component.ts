@@ -1,17 +1,26 @@
 import { HttpResponse } from '@angular/common/http';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { remove as _remove, assign as _assign } from 'lodash';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { User } from '../../models/user.model';
 import { UserService } from '../../services/user.service';
 import { ColumnItem } from '../../models/column-item.model';
-import { EMPTY, Subscription, catchError, filter, switchMap } from 'rxjs';
+import {
+  EMPTY,
+  Subscription,
+  catchError,
+  debounceTime,
+  distinctUntilChanged,
+  filter,
+  fromEvent,
+  map
+} from 'rxjs';
 import { DEFAULT_QUERY_CRITERIA, ROWS_OPTIONS } from '../../models/query-criteria.model';
 import { TableLazyLoadEvent } from 'primeng/table';
 
 const columns: ColumnItem[] = [
-  { header: 'No.', field: 'no', isForzenColumn: true, style: 'min-width: 80px', sort: true },
-  { header: 'Name', field: 'name', style: 'min-width: 150px', sort: true },
+  { header: 'No.', field: 'id', isForzenColumn: true, style: 'min-width: 80px', sort: true },
+  { header: 'Name', field: 'name', isForzenColumn: true, style: 'min-width: 150px', sort: true },
   { header: 'Gender', field: 'gender', style: 'min-width: 100px', sort: true },
   { header: 'Telephone', field: 'telephone', style: 'min-width: 120px', sort: true },
   { header: 'Email', field: 'email', sort: true },
@@ -24,7 +33,7 @@ const columns: ColumnItem[] = [
   templateUrl: './user-list.component.html',
   styleUrls: ['./user-list.component.scss']
 })
-export class UserListComponent implements OnInit, OnDestroy {
+export class UserListComponent implements OnInit, OnDestroy, AfterViewInit {
 
   userList: User[] = [];
   loading: boolean = true;
@@ -34,6 +43,10 @@ export class UserListComponent implements OnInit, OnDestroy {
   rowOptions = ROWS_OPTIONS;
   user$!: Subscription;
   deleteUser$!: Subscription;
+  seach$!: Subscription;
+
+  @ViewChild('search', { static: false })
+  searchInput!: ElementRef<HTMLInputElement>;
 
   queryCriteria = DEFAULT_QUERY_CRITERIA;
 
@@ -52,13 +65,13 @@ export class UserListComponent implements OnInit, OnDestroy {
       accept: () => {
         this.deleteUser$ = this.userService.deleteUser(userId).pipe(
           filter((reponse: HttpResponse<Object>) => reponse.ok),
-          switchMap(() => this.userService.getAllUser(this.queryCriteria)),
           catchError((error) => {
             this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to delete user' });
             return EMPTY;
           })
         ).subscribe(resopnse => {
-          this.userList = resopnse.data;
+          console.log("Delete");
+          this.retrieveAllUsers();
           this.messageService.add({ severity: 'success', summary: 'Success', detail: 'User is deleted' });
         });
       }
@@ -80,6 +93,23 @@ export class UserListComponent implements OnInit, OnDestroy {
       sortOrder: sortOrder == -1 ? 'desc' : 'asc'
     });
 
+    this.retrieveAllUsers();
+  }
+
+  ngAfterViewInit(): void {
+    this.seach$ = fromEvent<any>(this.searchInput.nativeElement, 'keyup').pipe(
+      map(event => event.target.value),
+      debounceTime(500),
+      distinctUntilChanged()
+    ).subscribe(val => {
+      _assign(this.queryCriteria, {
+        filters: val ? { 'blurry': val } : {}
+      });
+      this.retrieveAllUsers(true);
+    })
+  }
+
+  retrieveAllUsers(isSearch?: boolean): void {
     this.user$ = this.userService.getAllUser(this.queryCriteria).subscribe({
       next: (response) => {
         this.totalRecords = response.recordsTotal;
@@ -87,7 +117,6 @@ export class UserListComponent implements OnInit, OnDestroy {
         this.loading = false;
       }
     })
-    console.log(event);
   }
 
   ngOnDestroy(): void {
