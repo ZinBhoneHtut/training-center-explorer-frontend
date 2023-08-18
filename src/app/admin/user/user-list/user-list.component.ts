@@ -19,7 +19,7 @@ import { DEFAULT_QUERY_CRITERIA, ROWS_OPTIONS } from '../../models/query-criteri
 import { TableLazyLoadEvent } from 'primeng/table';
 
 const columns: ColumnItem[] = [
-  { header: 'No.', field: 'id', isForzenColumn: true, style: 'min-width: 80px', sort: true },
+  { header: 'No.', field: 'id', isForzenColumn: true, style: 'min-width: 80px', sort: false },
   { header: 'Name', field: 'name', isForzenColumn: true, style: 'min-width: 150px', sort: true },
   { header: 'Gender', field: 'gender', style: 'min-width: 100px', sort: true },
   { header: 'Telephone', field: 'telephone', style: 'min-width: 120px', sort: true },

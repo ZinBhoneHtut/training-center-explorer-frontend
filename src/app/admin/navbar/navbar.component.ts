@@ -18,12 +18,13 @@ export class NavbarComponent implements OnInit {
     this.eventService.buttonEvent.subscribe(value => this.sidebarVisible = value);
     this.items = [
       {
-          label: 'Dashboard',
-          icon: 'pi pi-home'
+          icon: 'pi pi-home',
+          routerLink: '/admin/dashboard'
       },
       {
         label: 'Users',
-        icon: 'pi pi-users'
+        icon: 'pi pi-users',
+        routerLink: '/admin/user'
     }
     ];
   }
