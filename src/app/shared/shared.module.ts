@@ -16,11 +16,13 @@ import { ToastModule } from 'primeng/toast';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { InputMaskModule } from "primeng/inputmask";
 import { RadioButtonModule } from 'primeng/radiobutton';
+import { ReactiveFormsModule } from "@angular/forms";
 
 @NgModule({
     declarations: [
     ],
     exports: [
+        ReactiveFormsModule,
         CommonModule,
         SkeletonModule,
         TableModule,

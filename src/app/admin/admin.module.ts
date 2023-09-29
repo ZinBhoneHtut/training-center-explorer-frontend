@@ -7,7 +7,7 @@ import { UserComponent } from "./user/user.component";
 import { UserListComponent } from './user/user-list/user-list.component';
 import { SharedModule } from "../shared/shared.module";
 import { ReactiveFormsModule } from "@angular/forms";
-import { SpinnerComponent } from "../shared/spinner/spinner.component";
+import { SpinnerComponent } from "../shared/components/spinner/spinner.component";
 import { SidebarComponent } from './sidebar/sidebar.component';
 import { DropdownDirective } from "../shared/directives/dropdown.directive";
 import { ListToCommaSeparatedStringPipe } from "../shared/pipes/list-to-comma-separated-string.pipe";
@@ -28,8 +28,7 @@ import { NumberOnlyDirective } from "../shared/directives/number-only.directive"
     ],
     imports: [
         AdminRoutingModule,
-        SharedModule,
-        ReactiveFormsModule
+        SharedModule
     ]
 })
 export class AdminModule { }

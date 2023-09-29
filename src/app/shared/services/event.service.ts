@@ -8,7 +8,12 @@ export class EventService {
 
   public buttonEvent = new EventEmitter<boolean>();
 
-  // clickCollapseButton(): void {
-  //   this.buttonEvent.emit();
-  // }
+  openSideBar(): void {
+    this.buttonEvent.emit(true);
+  }
+
+  closeSideBar(): void {
+    this.buttonEvent.emit(false);
+  }
+
 }

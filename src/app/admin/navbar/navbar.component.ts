@@ -35,7 +35,7 @@ export class NavbarComponent implements OnInit {
   }
 
   openSideBar() {
-    this.eventService.buttonEvent.emit(true);
+    this.eventService.openSideBar();
   }
 
 }

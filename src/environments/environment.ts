@@ -1,10 +1,12 @@
 // This file can be replaced during build by using the `fileReplacements` array.
 // `ng build` replaces `environment.ts` with `environment.prod.ts`.
 // The list of file replacements can be found in `angular.json`.
+const API_V1 = "/api/v1";
 
 export const environment = {
   production: false,
-  ADMIN_API: "/api/v1/admin"
+  ADMIN_API: `${API_V1}/admin`,
+  AUTH_API: `${API_V1}/auth`
 };
 
 /*

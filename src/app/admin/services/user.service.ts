@@ -12,7 +12,7 @@ import { queryCriteriaToHttpParam } from 'src/app/shared/shared.functions';
 })
 export class UserService {
 
-  BASE_URL: string = environment.ADMIN_API + "/user";
+  BASE_URL: string = `${environment.ADMIN_API}/user`;
 
   constructor(private _http: HttpClient) { }
 
